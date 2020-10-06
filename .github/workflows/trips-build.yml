@@ -1,0 +1,54 @@
+name: Build Trips
+on:
+  push:
+    paths:
+      - 'apis/trips/**'
+      - '.github/workflows/trips-build.yml'
+  pull_request:
+    paths:
+      - 'apis/trips/**'
+      - '.github/workflows/trips-build.yml'
+    branches: [ main ]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./apis/trips/...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build
+      working-directory: apis/trips
+      run: go build -v .
+
+    - name: Test
+      working-directory: apis/trips/tests
+      run: go test -v .
+
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        # Title of the issue
+        title: Build failed
+        # Token of the user that creates the issue
+        token: ${{secrets.GITHUB_TOKEN}}
+        # Assignees of the issue
+        assignees: ${{github.actor}}
+        body: Workflow failed for commit ${{github.sha}}

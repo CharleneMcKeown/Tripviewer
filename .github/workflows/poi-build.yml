@@ -1,4 +1,4 @@
-name: POI API (.net core)
+name: Build poi
 
 on:
   push:
