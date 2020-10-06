@@ -62,7 +62,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
-  
+
   publish_web_app:
     name: Deploy to Azure WebApp
     needs: [build_poi, push_to_acr]
