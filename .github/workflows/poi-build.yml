@@ -11,9 +11,12 @@ on:
       - '.github/workflows/poi-build.yml'
     branches: [ main ]
 
-jobs:
-  build:
+env:
+  IMAGE_NAME: devopsoh/api-poi 
+  IMAGE_TAG: ${{ github.run_id }}
 
+jobs:
+  build poi:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,4 +42,21 @@ jobs:
         token: ${{secrets.GITHUB_TOKEN}}
         # Assignees of the issue
         assignees: ${{github.actor}}
-        body: Workflow failed for commit ${{github.sha}}
+        
+  push_to_acr:
+    name: Build Docker Image and push to ACR
+    needs: build poi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and Tag Docker Image
+        run: | 
+          docker build . -t ${{ secrets.ACR_NAME }}/$IMAGE_NAME:$IMAGE_TAG
+        working-directory: apis/poi/web
+      - name: Login to ACR 
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run:  docker login ${{ secrets.ACR_NAME }} -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASSWORD }} 
+      - name: Push to ACR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
