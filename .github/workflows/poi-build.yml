@@ -53,15 +53,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and Tag Docker Image
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull request' && github.ref == 'refs/heads/main'
         run: | 
           docker build . -t $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
         working-directory: apis/poi/web
       - name: Login to ACR 
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull request' && github.ref == 'refs/heads/main'
         run:  docker login ${{ secrets.ACR_NAME }} -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASSWORD }} 
       - name: Push to ACR
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull request' && github.ref == 'refs/heads/main'
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
 
@@ -70,11 +70,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Azure authentication
+        if: github.event_name == 'pull request' && github.ref == 'refs/heads/main'
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS  }}
       - name: Deploy image to production slot
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull request' && github.ref == 'refs/heads/main'
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ env.webapp_name }}
