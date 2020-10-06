@@ -69,10 +69,13 @@ jobs:
     needs: [build_poi, push_to_acr]
     runs-on: ubuntu-latest
     steps:
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS  }}
       - name: Deploy image to production slot
         if: github.ref == 'refs/heads/main'
         uses: Azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.registry }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+          app-name: ${{ env.webapp_name }}
           images: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:${{github.run_number}}
