@@ -63,8 +63,8 @@ jobs:
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
         
-  publish_web_App:
-    name: Azure WebApp
+  publish_web_app:
+    name: Deploy to Azure WebApp
     needs: [build_poi, push_to_acr]
     runs-on: ubuntu-latest
     steps:
