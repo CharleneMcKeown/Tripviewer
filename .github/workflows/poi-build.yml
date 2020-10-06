@@ -68,14 +68,10 @@ jobs:
     needs: [build_poi, push_to_acr]
     runs-on: ubuntu-latest
     steps:
-     - uses: Azure/webapps-deploy@v2
-     - name: Deploy image to production slot
-     - with:
-        # Name of the Azure Web App
-        app-name: openhack7475poi
-        # Enter an existing Slot other than the Production slot
-        slot-name: production
-        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
-        images: $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
+      - uses: Azure/webapps-deploy@v2
+      - name: Deploy image to production slot
+      - with:
+          app-name: openhack7475poi
+          slot-name: production
+          images: $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
 
