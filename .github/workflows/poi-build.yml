@@ -16,7 +16,7 @@ env:
   ACR_NAME: ${{ secrets.ACR_NAME }} 
   ACR_USER: ${{ secrets.ACR_USER }} 
   IMAGE_NAME: devopsoh/api-poi 
-  IMAGE_TAG: ${{ github.run_id }}
+  IMAGE_TAG: ${{ github.run_number }}
 
 jobs:
   build_poi:
@@ -53,6 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and Tag Docker Image
+        if: github.ref == 'refs/heads/main'
         run: | 
           docker build . -t $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
         working-directory: apis/poi/web
