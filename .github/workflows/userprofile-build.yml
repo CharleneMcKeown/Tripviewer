@@ -28,10 +28,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        working-directory: ./apis/userprofile/  
     - run: npm ci
+      working-directory: ./apis/userprofile/  
     - run: npm run build --if-present
+      working-directory: ./apis/userprofile/ 
     - run: npm test
+      working-directory: ./apis/userprofile/ 
 
     - name: Create Issue Action
       if: ${{ failure() }}
