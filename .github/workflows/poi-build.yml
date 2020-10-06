@@ -54,9 +54,9 @@ jobs:
           docker build . -t ${{ secrets.ACR_NAME }}/$IMAGE_NAME:$IMAGE_TAG
         working-directory: apis/poi/web
       - name: Login to ACR 
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run:  docker login ${{ secrets.ACR_NAME }} -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASSWORD }} 
       - name: Push to ACR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
