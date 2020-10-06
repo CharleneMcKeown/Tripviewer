@@ -1,0 +1,30 @@
+name: POI API (.net core)
+
+on:
+  push:
+    paths:
+      - 'apis/poi/**'
+      - '.github/workflows/poi-build.yml'
+  pull_request:
+    paths:
+      - 'apis/poi/**'
+      - '.github/workflows/poi-build.yml'
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1
+    - name: Install dependencies
+      run: dotnet restore 'apis/poi/poi.sln'
+    - name: Build
+      run: dotnet build 'apis/poi/poi.sln' --configuration Release --no-restore
+    - name: Test
+      run: dotnet test 'apis/poi/tests/UnitTests/UnitTests.csproj' --no-restore --verbosity normal
