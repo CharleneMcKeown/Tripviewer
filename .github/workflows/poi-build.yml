@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: Azure/webapps-deploy@v2
-       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+     - name: Deploy image to production slot
      - with:
         # Name of the Azure Web App
         app-name: openhack7475poi
