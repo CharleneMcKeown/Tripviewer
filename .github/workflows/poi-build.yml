@@ -34,7 +34,7 @@ jobs:
       uses: nashmaniac/create-issue-action@v1.1
       with:
         # Title of the issue
-        title: Workflow failed ${{ GITHUB_RUN_NUMBER }}
+        title: Build failed
         # Token of the user that creates the issue
         token: ${{secrets.GITHUB_TOKEN}}
         # Assignees of the issue
