@@ -64,14 +64,12 @@ jobs:
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
 
   publish_web_app:
-    name: Deploy to Azure WebApp
     needs: [build_poi, push_to_acr]
     runs-on: ubuntu-latest
     steps:
-      - uses: Azure/webapps-deploy@v2
       - name: Deploy image to production slot
-      - with:
+        uses: Azure/webapps-deploy@v2
+        with:
           app-name: openhack7475poi
           slot-name: production
           images: $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
-
