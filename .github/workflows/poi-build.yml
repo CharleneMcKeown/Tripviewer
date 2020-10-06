@@ -16,7 +16,7 @@ env:
   IMAGE_TAG: ${{ github.run_id }}
 
 jobs:
-  build poi:
+  build_poi:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,7 @@ jobs:
         
   push_to_acr:
     name: Build Docker Image and push to ACR
-    needs: build poi
+    needs: build_poi
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
