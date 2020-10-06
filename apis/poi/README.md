@@ -1,5 +1,5 @@
 
-# POI Service Description
+# POI Service
 
 ## Overview
 
