@@ -12,6 +12,7 @@ on:
     branches: [ main ]
 
 env:
+  webapp_name: openhack7475poi
   ACR_NAME: ${{ secrets.ACR_NAME }} 
   ACR_USER: ${{ secrets.ACR_USER }} 
   IMAGE_NAME: devopsoh/api-poi 
@@ -56,10 +57,10 @@ jobs:
           docker build . -t $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
         working-directory: apis/poi/web
       - name: Login to ACR 
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run:  docker login ${{ secrets.ACR_NAME }} -u ${{ secrets.ACR_USER }} -p ${{ secrets.ACR_PASSWORD }} 
       - name: Push to ACR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
 
@@ -68,9 +69,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy image to production slot
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: Azure/webapps-deploy@v2
         with:
-          app-name: 'openhack7475poi'
+          app-name: ${{ env.registry }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
-          images: $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
+          images: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:${{github.run_number}}
