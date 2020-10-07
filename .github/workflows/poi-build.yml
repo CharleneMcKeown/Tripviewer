@@ -93,13 +93,6 @@ jobs:
     needs: publish_web_app_staging
     steps:
     - uses: actions/checkout@v2
-
-    - name: "Set Expected Validation Tag"
-      run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
-
-    - name: Build Validation Container
-      run: docker build -t poivalidate apis/poi/webvalidate
-
     - name: Web Validate 
       run: ./run.sh poivalidate $staging_url 
 
