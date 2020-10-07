@@ -15,6 +15,7 @@ on:
 
 env:
   webapp_name: openhack7475poi
+  resource_group: openhack7475rg
   ACR_NAME: ${{ secrets.ACR_NAME }} 
   ACR_USER: ${{ secrets.ACR_USER }} 
   IMAGE_NAME: devopsoh/api-poi 
@@ -67,7 +68,7 @@ jobs:
         run: |
           docker push $ACR_NAME/$IMAGE_NAME:$IMAGE_TAG
 
-  publish_web_app:
+  publish_web_app_staging:
     needs: [build_poi, push_to_acr]
     runs-on: ubuntu-latest
     steps:
@@ -76,9 +77,110 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS  }}
-      - name: Deploy image to production slot
+      - name: Deploy image to staging slot
         if: github.ref == 'refs/heads/main'
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ env.webapp_name }}
+          slot: staging
           images: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:${{github.run_number}}
+
+  validate_staging:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: publish_web_app_staging
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "Set Expected Validation Tag"
+      run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
+
+    - name: Build Validation Container
+      run: docker build -t poivalidate apis/poi/webvalidate
+
+    - name: Web Validate 
+      run: ./run.sh poivalidate $staging_url 
+
+    - uses: nashmaniac/create-issue-action@v1.1
+      if: failure()
+      with:
+        # Title of the issue
+        title: Build failed
+        # Token of the user that creates the issue
+        token: ${{secrets.GITHUB_TOKEN}}
+        # Assignees of the issue
+        assignees: ${{github.actor}}
+  
+  swap_slots:
+      if: github.ref == 'refs/heads/main'
+      runs-on: ubuntu-latest
+      needs: validate_staging
+      steps:
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS  }}
+
+      - name: Swap staging to production
+        run: |
+          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production
+          - name: Create Issue Action
+
+      - uses: nashmaniac/create-issue-action@v1.1
+        if: failure()
+        with:
+          # Title of the issue
+          title: Build failed
+          # Token of the user that creates the issue
+          token: ${{secrets.GITHUB_TOKEN}}
+          # Assignees of the issue
+          assignees: ${{github.actor}}
+
+  validate_production:
+      if: github.ref == 'refs/heads/main'
+      runs-on: ubuntu-latest
+      needs: swap_slots
+      steps:
+      - uses: actions/checkout@v2
+
+      - name: "Set Expected Validation Tag"
+        run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
+
+      - name: Build Validation Container
+        run: docker build -t poivalidate apis/poi/webvalidate
+
+      - name: Web Validate 
+        run: ./run.sh poivalidate $prod_url
+        
+      - uses: nashmaniac/create-issue-action@v1.1
+        if: failure()
+        with:
+          # Title of the issue
+          title: Build failed
+          # Token of the user that creates the issue
+          token: ${{secrets.GITHUB_TOKEN}}
+          # Assignees of the issue
+          assignees: ${{github.actor}}
+
+  roll_back:
+      if: failure()
+      runs-on: ubuntu-latest
+      needs: validate_production
+      steps:
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS  }}
+
+      - name: Swap production and staging
+        run: |
+          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
+      - uses: nashmaniac/create-issue-action@v1.1
+        if: failure()
+        with:
+          # Title of the issue
+          title: Build failed
+          # Token of the user that creates the issue
+          token: ${{secrets.GITHUB_TOKEN}}
+          # Assignees of the issue
+          assignees: ${{github.actor}}
