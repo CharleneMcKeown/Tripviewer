@@ -2,7 +2,7 @@ name: Build poi
 
 on:
   push:
-    branches: [ main ]
+    #branches: [ main ]
     paths:
       - apis/poi/**
       - .github/workflows/poi-build.yml
