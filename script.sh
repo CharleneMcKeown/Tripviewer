@@ -40,5 +40,5 @@ echo "APT::Get::Assume-Yes \"true"\"; > /etc/apt/apt.conf .d/90assumeyes \
 
     && curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip > /tmp/terraform_${TF_VERSION}_linux_amd64.zip \
     && unzip /tmp/terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin \
-    && rm /tmp/terraform_${TF_VERSION}_linux_amd64.zip \
+    && rm /tmp/terraform_${TF_VERSION}_linux_amd64.zip
 
