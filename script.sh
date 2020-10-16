@@ -1,5 +1,5 @@
-ENV AZCOPY_VERSION='10.4.3'
-ENV TF_VERSION='0.13.2'
+AZCOPY_VERSION='10.4.3'
+TF_VERSION='0.13.2'
 
 echo "APT::Get::Assume-Yes \"true"\"; > /etc/apt/apt.conf .d/90assumeyes \
 && apt-get update \
