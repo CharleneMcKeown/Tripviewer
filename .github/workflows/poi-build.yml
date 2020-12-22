@@ -84,7 +84,7 @@ jobs:
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ env.webapp_name }}
-          slot: staging
+          slot-name: staging
           images: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:${{github.run_number}}
 
   validate_staging:
