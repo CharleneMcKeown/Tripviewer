@@ -14,7 +14,7 @@ on:
 
 
 env:
-  staging_url: https://openhackgjp0clq6poi-staging.azurewebsites.net
+  staging_url: http://openhackgjp0clq6poi-staging.azurewebsites.net
   production_url: http://openhackgjp0clq6poi.azurewebsites.net
   webapp_name: openhackgjp0clq6poi
   resource_group: openhackgjp0clq6rg
