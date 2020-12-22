@@ -14,8 +14,8 @@ on:
 
 
 env:
-  staging_url: https://openhackgjp0clq6poi-staging.azurewebsites.net
-  production_url: https://openhackgjp0clq6poi.azurewebsites.net
+  staging_url: https://openhackgjp0clq6poi-staging.azurewebsites.net/api/healthcheck/poi
+  production_url: https://openhackgjp0clq6poi.azurewebsites.net/api/healthcheck/poi
   webapp_name: openhackgjp0clq6poi
   resource_group: openhackgjp0clq6rg
   ACR_NAME: ${{ secrets.ACR_NAME }} 
