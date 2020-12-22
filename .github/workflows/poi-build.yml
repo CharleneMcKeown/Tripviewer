@@ -14,10 +14,10 @@ on:
 
 
 env:
-  staging_url: https://openhack7475poi-staging.azurewebsites.net
-  production_url: https://openhack7475poi.azurewebsites.net
-  webapp_name: openhack7475poi
-  resource_group: openhack7475rg
+  staging_url: https://openhackgjp0clq6poi-staging.azurewebsites.net
+  production_url: https://openhackgjp0clq6poi.azurewebsites.net
+  webapp_name: openhackgjp0clq6poi
+  resource_group: openhackgjp0clq6rg
   ACR_NAME: ${{ secrets.ACR_NAME }} 
   ACR_USER: ${{ secrets.ACR_USER }} 
   IMAGE_NAME: devopsoh/api-poi 
