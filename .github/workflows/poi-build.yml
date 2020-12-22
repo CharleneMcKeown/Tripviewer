@@ -15,7 +15,7 @@ on:
 
 env:
   staging_url: https://openhackgjp0clq6poi-staging.azurewebsites.net
-  production_url: https://openhackgjp0clq6poi.azurewebsites.net
+  production_url: http://openhackgjp0clq6poi.azurewebsites.net
   webapp_name: openhackgjp0clq6poi
   resource_group: openhackgjp0clq6rg
   ACR_NAME: ${{ secrets.ACR_NAME }} 
@@ -118,7 +118,7 @@ jobs:
 
       - name: Swap staging to production
         run: |
-          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production
+          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot-name staging --target-slot production
           - name: Create Issue Action
 
       - uses: nashmaniac/create-issue-action@v1.1
@@ -145,7 +145,7 @@ jobs:
         run: docker build -t poivalidate apis/poi/webvalidate
 
       - name: Web Validate 
-        run: ./run.sh poivalidate $prod_url
+        run: ./run.sh poivalidate $production_url
         
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
@@ -169,7 +169,7 @@ jobs:
 
       - name: Swap production and staging
         run: |
-          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
+          az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot-name staging --target-slot production 
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
