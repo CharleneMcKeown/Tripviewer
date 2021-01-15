@@ -93,7 +93,7 @@ jobs:
     needs: publish_web_app_staging
     steps:
       - uses: actions/checkout@v2
-      - name: Web Validate 
+      - name: validate_staging
         run: |
           chmod +x run.sh
           ./run.sh $staging_url 
