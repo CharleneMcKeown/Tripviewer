@@ -96,7 +96,7 @@ jobs:
     - name: Web Validate 
       run: |
         chmod +x run.sh
-        ./run.sh poivalidate $staging_url 
+        ./run.sh $staging_url 
 
     - uses: nashmaniac/create-issue-action@v1.1
       if: failure()
