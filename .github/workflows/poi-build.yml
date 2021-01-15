@@ -121,8 +121,8 @@ jobs:
       - name: Swap staging to production
         run: |
           az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production
-          - name: Create Issue Action
-
+      
+      - name: Create Issue Action
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
