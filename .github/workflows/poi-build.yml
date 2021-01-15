@@ -140,7 +140,6 @@ jobs:
       needs: swap_slots
       steps:
       - uses: actions/checkout@v2
-
       - name: Web Validate 
         run: ./run.sh $production_url
       
@@ -168,6 +167,8 @@ jobs:
       - name: Swap production and staging
         run: |
           az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
+      
+      - name: Create Issue Action
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
