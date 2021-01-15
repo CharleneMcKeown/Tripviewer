@@ -139,7 +139,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Web Validate 
-        run: ./run.sh $production_url
+        
+        run: |
+          chmod +x run.sh 
+          ./run.sh $production_url
         
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
