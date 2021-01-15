@@ -123,7 +123,6 @@ jobs:
         run: |
           az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production
       
-      - name: Create Issue Action
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
@@ -143,7 +142,6 @@ jobs:
       - name: Web Validate 
         run: ./run.sh $production_url
       
-      - name: Create Issue Action
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
@@ -168,7 +166,6 @@ jobs:
         run: |
           az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
       
-      - name: Create Issue Action
       - uses: nashmaniac/create-issue-action@v1.1
         if: failure()
         with:
