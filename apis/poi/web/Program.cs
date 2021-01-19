@@ -14,7 +14,6 @@ namespace poi
     {
         public static void Main(string[] args)
         {
-            return;
             BuildWebHost(args).Run();
 
         }
