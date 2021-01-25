@@ -16,7 +16,7 @@ go run main.go
 
 ## Testing
 
-To run unit tests, execute:
+To run unit tests, execute:s
 
 ```shell
 go test ./tests
