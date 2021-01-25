@@ -1,0 +1,46 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+ branches:
+   include:
+     - '*'
+   exclude:
+     - main
+ paths:
+   include:
+     - apis/poi/*
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+     - apis/poi/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '2.1.504'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'apis/poi/poi.sln'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: 'apis/poi/poi.sln'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'apis/poi/tests/UnitTests/UnitTests.csproj'
