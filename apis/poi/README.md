@@ -9,7 +9,7 @@
 
 ### Running the unit tests
 
-### Running the Integration Test
+### Running the Integration Testc
 
 ### References
 
