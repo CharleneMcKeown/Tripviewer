@@ -1,16 +1,17 @@
 name: Build poi
 
+
 on:
   push:
     #branches: [ main ]
     paths:
       - apis/poi/**
       - .github/workflows/poi-build.yml
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'apis/poi/**'
-      - '.github/workflows/poi-build.yml'
+#  pull_request:
+ #   branches: [ main ]
+  #  paths:
+   #   - 'apis/poi/**'
+    #  - '.github/workflows/poi-build.yml'
 
 
 env:
