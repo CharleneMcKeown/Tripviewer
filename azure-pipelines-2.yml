@@ -1,0 +1,82 @@
+# Run TRIPS Unit Tests
+
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - apis/trips
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+     - apis/trips
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: rununittest
+  displayName: Run unit tests
+  #condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:  
+  - job: rununittest
+    displayName: Run unit tests
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: GoTool@0
+        inputs:
+          version: '1.11.1'
+      - task: Go@0
+        inputs:
+          command: 'get'
+          workingDirectory: 'apis/trips'
+      - task: Go@0
+        inputs:
+          command: 'get'
+          arguments: 'github.com/tebeka/go2xunit'
+          workingDirectory: 'apis/trips'
+
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            env | sort
+            GOPATH=$HOME
+            export PATH=$PATH:$(go env GOPATH)/bin
+            2>&1 go test -v | go2xunit -output tests.xml
+          workingDirectory: 'apis/trips/tests'
+
+      # - task: Go@0
+      #   inputs:
+      #     command: 'test'
+      #     arguments: '2>&1 go test -v | go2xunit -output tests.xml'
+      #     workingDirectory: '- task: Bash@3
+
+      
+      # - task: Bash@3
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: 'go tool cover -html=c.out -o coverage.html'
+       
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: 'tests.xml'
+          searchFolder: '$(System.DefaultWorkingDirectory)/apis/trips/tests'
+          testRunTitle: '$(Build.BuildId)-test-run'
+
+  - job: createworkitem
+    displayName: Create work item on failure
+    dependsOn: rununittest
+    condition: failed() # this job will only run if rununittest fails
+    steps:
+      - task: CreateWorkItem@1
+        displayName: Create work item on failure
+        inputs:
+          workItemType: 'Issue'
+          title: 'Build $(Build.BuildId) failed'
