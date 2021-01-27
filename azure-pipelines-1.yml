@@ -11,14 +11,14 @@ trigger:
      - main
  paths:
    include:
-     - apis/poi/*
+     - apis/poi
 pr:
   branches:
     include:
       - main
   paths:
     include:
-     - apis/poi/
+     - apis/poi
 
 pool:
   vmImage: 'ubuntu-latest'
