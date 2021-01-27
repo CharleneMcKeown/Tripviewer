@@ -16,6 +16,7 @@ pr:
   branches:
     include:
       - main
+      - '*'
   paths:
     include:
      - apis/poi
